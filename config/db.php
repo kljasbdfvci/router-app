@@ -3,10 +3,8 @@
 return [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=router',
-    #'username' => 'root',
-    #'password' => '#T+Y5=@%uC6VvGFJ',
-    'username' => 'router_user',
-    'password' => '123456',
+    'username' => 'root',
+    'password' => '#T+Y5=@%uC6VvGFJ',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)
