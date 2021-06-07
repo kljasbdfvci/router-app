@@ -13,7 +13,7 @@ use yii\helpers\Url;
 
 AppAsset::register($this);
 
-$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => Url::to('@web/image/favicon32.png')]);
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => Url::to('@web/image/favicon32x32.ico')]);
 
 $navLeftItems = NULL;
 $navRightItems = NULL;
