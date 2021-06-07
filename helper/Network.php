@@ -66,9 +66,8 @@ class Network
 
     private function deleteAdaptersIps()
     {
-        $adapters = $this->getAdapters();
-        for ($i = 0; $i < sizeof($adapters); $i++) {
-            $this->deleteAdapterIps($adapters[$i]);
+        foreach ($this->getAdapters() as $adapter) {
+            $this->deleteAdapterIps($adapter);
         }
     }
 
@@ -91,9 +90,16 @@ class Network
         }
         foreach ($this->getAdapters() as $adapter) {
             for ($j = 0; $j < $this->numberOfIp; $j++) {
-                $ip = $network_datas["network_" . $adapter . "_ip" . $j];
-                $netmask = $network_datas["network_" . $adapter . "_netmask" . $j];
-                if ((isset($ip) && strlen($ip) > 0) && (isset($netmask) && strlen($netmask) > 0)) {
+
+                $ip = "";
+                if (isset($network_datas["network_" . $adapter . "_ip" . $j])) {
+                    $ip = $network_datas["network_" . $adapter . "_ip" . $j];
+                }
+                $netmask = "";
+                if (isset($network_datas["network_" . $adapter . "_netmask" . $j])) {
+                    $netmask = $network_datas["network_" . $adapter . "_netmask" . $j];
+                }
+                if (strlen($ip) > 0 && strlen($netmask) > 0) {
                     $this->setAdapterIp($adapter, $j, $ip, $netmask);
                 }
             }
