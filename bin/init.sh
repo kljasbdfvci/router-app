@@ -3,6 +3,12 @@
 ### Service
 service apache2 restart
 
+### make log dir
+if [ ! -d /disk/log/ ]
+then
+    mkdir /disk/log/
+fi
+
 ### Create Database
 /memory/app/yii database/create router 2>/disk/log/createDatabase.log
 
