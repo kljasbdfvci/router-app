@@ -4,7 +4,8 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'basic',
+    'id' => 'router',
+    'name' => 'Router',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -14,15 +15,18 @@ $config = [
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => '',
+            'cookieValidationKey' => 'yotsayt8zw99ww5ltvcq',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        /*
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            #'class' => 'dektrium\user\Module',
         ],
+        */
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
@@ -43,6 +47,11 @@ $config = [
             ],
         ],
         'db' => $db,
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => true,
+            'rules' => [],
+        ],
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -51,6 +60,27 @@ $config = [
             ],
         ],
         */
+    ],
+    'modules' => [
+        'user' => [
+            'class' => 'dektrium\user\Module',
+            'enableFlashMessages' => true,
+            'enableRegistration' => false,
+            'enableGeneratingPassword' => false,
+            'enableConfirmation' => false,
+            'enableUnconfirmedLogin' => false,
+            'enablePasswordRecovery' => false,
+            'enableAccountDelete' => false,
+            'emailChangeStrategy' => \dektrium\user\Module::STRATEGY_DEFAULT,
+            'confirmWithin' => 3600 * 1,
+            'rememberFor' => 3600 * 6,
+            'recoverWithin' => 3600 * 0,
+            'admins' => ['admin'],
+            'adminPermission' => null,
+            'cost' => 8,
+            'urlPrefix' => 'user',
+            'urlRules' => [],
+        ],
     ],
     'params' => $params,
 ];
