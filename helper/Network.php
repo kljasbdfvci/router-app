@@ -105,9 +105,9 @@ class Network
     static public function adapterType($adapter)
     {
         $type = "";
-        if (str_contains($adapter, "eth")) {
+        if (strpos($adapter, "eth") !== false) {
             $type = "eth";
-        } else if (str_contains($adapter, "wlan")) {
+        } else if (strpos($adapter, "wlan") !== false) {
             $type = "wlan";
         }
         return $type;

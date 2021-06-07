@@ -29,7 +29,7 @@ class m210606_130834_create_system extends Migration
     {
         $this->createTable('{{%system}}', [
             'id' => $this->primaryKey(),
-            'key'  => $this->string()->notNull(),
+            'key'  => $this->string(100)->notNull(),
             'value'  => $this->string()->notNull(),
         ]);
 
