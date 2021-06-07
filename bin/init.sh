@@ -3,6 +3,9 @@
 ### Service
 service apache2 restart
 
+### Create Database
+/memory/app/yii database/create router 2>/disk/log/createDatabase.log
+
 ### Init Database
 /memory/app/bin/initDatabase.sh &>>/disk/log/initDatabase.log
 
