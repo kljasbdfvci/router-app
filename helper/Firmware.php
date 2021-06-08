@@ -11,96 +11,33 @@ namespace app\helper;
 require_once __DIR__ . "/File.php";
 require_once __DIR__ . "/Variable.php";
 
-class Firmware {
+class Firmware
+{
 
-    //
-    private $firmwarePath;
     // App
-    private $appSignature;
-    private $appFilePrefixPath;
+    private $appName;
     private $appCurrentVersionPath;
-    private $appTmpFilePath;
-    private $appNewPath;
-    private $appTmpTgzFilePath;
-    private $appTmpDirFilePath;
+    private $appUpdatedFlagPath;
     // System
-    private $systemSignature;
-    private $systemFilePrefixPath;
-    private $systemCurrentVersionPath;
-    private $systemTmpFilePath;
-    private $systemNewPath;
-    private $systemTmpTgzFilePath;
-    private $systemTmpDirFilePath;
+    private $osName;
+    private $osCurrentVersionPath;
+    private $osUpdatedFlagPath;
 
-    public function __construct() {
+    public function __construct()
+    {
         $variable = new Variable();
-        $this->firmwarePath = $variable->getDiskPath() . '/firmware';
         // App
-        $this->appSignature = "app-pbx";
-        $this->appFilePrefixPath = $this->firmwarePath . "/" . $this->appSignature; // real
-        $this->appCurrentVersionPath = $variable->getAppPath() . '/revision';
-        $this->appTmpFilePath = $variable->getTmpPath() . "/" . $this->appSignature;
-        $this->appNewPath = $this->appTmpFilePath . ".new";
-        $this->appTmpTgzFilePath = $this->appTmpFilePath . ".tgz";
-        $this->appTmpDirFilePath = $this->appTmpFilePath . ".dir";
-        // System
-        $this->systemSignature = "linux-os.18-pbx";
-        $this->systemFilePrefixPath = $this->firmwarePath . "/" . $this->systemSignature; // real
-        $this->systemCurrentVersionPath = '/revision';
-        $this->systemTmpFilePath = $variable->getTmpPath() . "/" . $this->systemSignature;
-        $this->systemNewPath = $this->systemTmpFilePath . ".new";
-        $this->systemTmpTgzFilePath = $this->systemTmpFilePath . ".tgz";
-        $this->systemTmpDirFilePath = $this->systemTmpFilePath . ".dir";
+        $this->appName = $variable->getAppName();
+        $this->appCurrentVersionPath = $variable->getAppPath() . '/version';
+        $this->appUpdatedFlagPath = $variable->getTmpPath() . $this->appName . ".new";
+        // Os
+        $this->osName = $variable->getOsName();
+        $this->osCurrentVersionPath = '/version';
+        $this->osUpdatedFlagPath = $variable->getTmpPath() . $this->osName . ".new";
     }
 
-    // Serial Number
-    public function getSerialNumber() {
-        return shell_exec("sudo serial | tr -d '\n'");
-    }
-
-    private function getPass() {
-        return shell_exec("sudo serial -s code | tr -d '\n'");
-    }
-
-    // App
-    public function checkAppTmpFile() {
-        $resCheckAppTmpFile = FALSE;
-        //  
-        $pass = $this->getPass();
-        $appTmpFile = new File($this->appTmpFilePath);
-        if ($appTmpFile->decryptFile($pass, $this->appTmpTgzFilePath, TRUE)) {
-            $appTmpDirFile = new File($this->appTmpDirFilePath);
-            $appTmpDirFile->mkdir(TRUE);
-            $appTmpTgzFile = new File($this->appTmpTgzFilePath);
-            if ($appTmpTgzFile->untarTgz($this->appTmpDirFilePath, TRUE)) {
-                $appTmpDirSignatureFile = new File($this->appTmpDirFilePath . "/signature");
-                $signature = trim($appTmpDirSignatureFile->read());
-                if ($signature == $this->appSignature) {
-                    $appTmpDirRevisionFile = new File($this->appTmpDirFilePath . "/revision");
-                    $revision = trim($appTmpDirRevisionFile->read());
-                    $appTmpFile->moveTo($this->appFilePrefixPath . "-v" . $revision, TRUE);
-                    $this->setAppNew();
-                    $resCheckAppTmpFile = TRUE;
-                    //
-                    $appTmpDirFile->delete(TRUE);
-                    $appTmpTgzFile->delete(TRUE);
-                } else {
-                    $appTmpFile->delete(TRUE);
-                    $appTmpDirFile->delete(TRUE);
-                    $appTmpTgzFile->delete(TRUE);
-                }
-            } else {
-                $appTmpFile->delete(TRUE);
-                $appTmpDirFile->delete(TRUE);
-                $appTmpTgzFile->delete(TRUE);
-            }
-        } else {
-            $appTmpFile->delete(TRUE);
-        }
-        return $resCheckAppTmpFile;
-    }
-
-    public function getAppCurrentVersion() {
+    public function getAppCurrentVersion()
+    {
         $file = new File($this->appCurrentVersionPath);
         if ($file->exists()) {
             return $file->read();
@@ -109,61 +46,34 @@ class Firmware {
         }
     }
 
-    private function setAppNew() {
-        $file = new File($this->appNewPath);
+    public function getAppNewVersion()
+    {
+        return shell_exec("serial -r {$this->appName} | tr -d '\n'");
+    }
+
+    public function appUpdate()
+    {
+        $variable = new Variable();
+        exec("serial -u {$this->appName} {$variable->getFirmwarePath()} {$this->appCurrentVersionPath}  {$variable->getTmpPath()}  | tr -d '\n'", $output, $return_code);
+        return $return_code;
+    }
+
+    public function setAppUpdated()
+    {
+        $file = new File($this->appUpdatedFlagPath);
         $file->write("");
         return;
     }
 
-    public function isAppNewUploaded() {
-        $file = new File($this->appNewPath);
+    public function isAppUpdated()
+    {
+        $file = new File($this->appUpdatedFlagPath);
         return $file->exists();
     }
 
-    public function getAppTmpFilePath() {
-        return $this->appTmpFilePath;
-    }
-
-    // System
-    public function checkSystemTmpFile() {
-        $resCheckSystemTmpFile = FALSE;
-        //  
-        $pass = $this->getPass();
-        $systemTmpFile = new File($this->systemTmpFilePath);
-        if ($systemTmpFile->decryptFile($pass, $this->systemTmpTgzFilePath, TRUE)) {
-            $systemTmpDirFile = new File($this->systemTmpDirFilePath);
-            $systemTmpDirFile->mkdir(TRUE);
-            $systemTmpTgzFile = new File($this->systemTmpTgzFilePath);
-            if ($systemTmpTgzFile->untarTgz($this->systemTmpDirFilePath, TRUE)) {
-                $systemTmpDirSignatureFile = new File($this->systemTmpDirFilePath . "/signature");
-                $signature = trim($systemTmpDirSignatureFile->read());
-                if ($signature == $this->systemSignature) {
-                    $systemTmpDirRevisionFile = new File($this->systemTmpDirFilePath . "/revision");
-                    $revision = trim($systemTmpDirRevisionFile->read());
-                    $systemTmpFile->moveTo($this->systemFilePrefixPath . "-v" . $revision, TRUE);
-                    $this->setSystemNew();
-                    $resCheckSystemTmpFile = TRUE;
-                    //
-                    $systemTmpDirFile->delete(TRUE);
-                    $systemTmpTgzFile->delete(TRUE);
-                } else {
-                    $systemTmpFile->delete(TRUE);
-                    $systemTmpDirFile->delete(TRUE);
-                    $systemTmpTgzFile->delete(TRUE);
-                }
-            } else {
-                $systemTmpFile->delete(TRUE);
-                $systemTmpDirFile->delete(TRUE);
-                $systemTmpTgzFile->delete(TRUE);
-            }
-        } else {
-            $systemTmpFile->delete(TRUE);
-        }
-        return $resCheckSystemTmpFile;
-    }
-
-    public function getSystemCurrentVersion() {
-        $file = new File($this->systemCurrentVersionPath);
+    public function getOsCurrentVersion()
+    {
+        $file = new File($this->osCurrentVersionPath);
         if ($file->exists()) {
             return $file->read();
         } else {
@@ -171,19 +81,28 @@ class Firmware {
         }
     }
 
-    private function setSystemNew() {
-        $file = new File($this->systemNewPath);
+    public function getOsNewVersion()
+    {
+        return shell_exec("serial -r {$this->osName} | tr -d '\n'");
+    }
+
+    public function osUpdate()
+    {
+        $variable = new Variable();
+        exec("serial -u {$this->osName} {$variable->getFirmwarePath()} {$this->osCurrentVersionPath}  {$variable->getTmpPath()}  | tr -d '\n'", $output, $return_code);
+        return $return_code;
+    }
+
+    public function setOsUpdated()
+    {
+        $file = new File($this->osUpdatedFlagPath);
         $file->write("");
         return;
     }
 
-    public function isSystemNewUploaded() {
-        $file = new File($this->systemNewPath);
+    public function isOsUpdated()
+    {
+        $file = new File($this->osUpdatedFlagPath);
         return $file->exists();
     }
-
-    public function getSystemTmpFilePath() {
-        return $this->systemTmpFilePath;
-    }
-
 }

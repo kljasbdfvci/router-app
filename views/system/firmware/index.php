@@ -4,72 +4,68 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Network */
+/* @var $model app\models\Firmware */
 
 $this->title = 'Firmware';
 $this->params['breadcrumbs'][] = ['label' => 'System'];
 $this->params['breadcrumbs'][] = ['label' => $this->title];
 ?>
 
-<div class="network-update">
+<div class="firmware-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <div class="network-form">
+    <div class="firmware-form">
 
         <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
         <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        System Info
-                    </h4>
-                </div>
-                <div class="panel-body">
-                    <p>Serial Number: <?= $serialNumber ?></p>
-                </div>
-            </div>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         Application
-                        <?=
-                        $isAppNewUploaded ?
-                                "<span class='text-primary h4'>"
-                                . "System Will Update After Reboot."
-                                . "</span>" : ""
-                        ?>
+                        <?php if ($isAppUpdated) { ?>
+                            <span class='text-primary h4'>
+                                System Will Update After Reboot.
+                            </span>
+                        <?php } ?>
                     </h4>
-
-
                 </div>
                 <div class="panel-body">
-                    <p>Current Verion: <?= $appCurrentVersion ?></p>
-                    <?= $form->field($model, 'appFile')->fileInput() ?>
+                    <p>Current Version: <?= $appCurrentVersion ?></p>
+                    <p>New Version: <?= $appNewVersion ?></p>
+                    <?php if ($appCurrentVersion != $appNewVersion) { ?>
+                        <div class="form-group">
+                            <?= $form->field($model, 'app')->checkbox() ?>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         System
-                        <?=
-                        $isSystemNewUploaded ?
-                                "<span class='text-primary h4'>"
-                                . "System Will Update After Reboot."
-                                . "</span>" : ""
-                        ?>
+                        <?php if ($isOsUpdated) { ?>
+                            <span class='text-primary h4'>
+                                System Will Update After Reboot.
+                            </span>
+                        <?php } ?>
                     </h4>
                 </div>
-                <div class="panel-body"> 
-                    <p>Current Verion: <?= $systemCurrentVersion ?></p>
-                    <?= $form->field($model, 'systemFile')->fileInput() ?>
+                <div class="panel-body">
+                    <p>Current Version: <?= $osCurrentVersion ?></p>
+                    <p>New Version: <?= $osNewVersion ?></p>
+                    <?php if ($osCurrentVersion != $osNewVersion) { ?>
+                        <?= $form->field($model, 'os')->checkbox() ?>
+                    <?php } ?>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <?= Html::submitButton('Upload', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton('Update', ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

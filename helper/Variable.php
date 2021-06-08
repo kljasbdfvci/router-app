@@ -8,8 +8,11 @@
 
 namespace app\helper;
 
-class Variable {
-
+class Variable
+{
+    // names
+    private $appName;
+    private $osName;
     // /tmp
     private $tmpPath;
     // /etc
@@ -21,16 +24,18 @@ class Variable {
     private $varLibMysqlPath;
     // /disk
     private $diskPath;
-    private $diskMysqlPath;
+    private $firmwarePath;
     // /memory
     private $memoryPath;
-    private $appRecoveryPath;
     private $appPath;
     private $appBinPath;
     private $appWebPath;
-    private $initPejvakDatabase;
 
-    public function __construct() {
+    public function __construct()
+    {
+        // names
+        $this->appName = "router-app";
+        $this->osName = "router-os";
         // /tmp
         $this->tmpPath = "/tmp";
         // /etc
@@ -42,75 +47,87 @@ class Variable {
         $this->varLibMysqlPath = $this->varLibPath . "/mysql";
         // /disk
         $this->diskPath = "/disk";
-        $this->diskMysqlPath = $this->diskPath . "/mysql";
+        $this->firmwarePath = $this->diskPath . "/firmware";
         // /memory
         $this->memoryPath = "/memory";
-        $this->appRecoveryPath = $this->memoryPath . "/app";
         $this->appPath = $this->memoryPath . "/app";
         $this->appBinPath = $this->appPath . "/bin";
         $this->appWebPath = $this->appPath . "/web";
-        $this->initPejvakDatabase = $this->appBinPath . "/initPejvakDatabase";
+    }
+
+    // names
+    public function getAppName()
+    {
+        return $this->appName;
+    }
+
+    public function getOsName()
+    {
+        return $this->osName;
     }
 
     // /tmp
-    public function getTmpPath() {
+    public function getTmpPath()
+    {
         return $this->tmpPath;
     }
 
     // /etc
-    public function getEtcPath() {
+    public function getEtcPath()
+    {
         return $this->etcPath;
     }
 
-    public function getEtcSystemPath() {
+    public function getEtcSystemPath()
+    {
         return $this->etcSystemPath;
     }
 
     // /var
-    public function getVarPath() {
+    public function getVarPath()
+    {
         return $this->varPath;
     }
 
-    public function getVarLibPath() {
+    public function getVarLibPath()
+    {
         return $this->varLibPath;
     }
 
-    public function getVarLibMysqlPath() {
+    public function getVarLibMysqlPath()
+    {
         return $this->varLibMysqlPath;
     }
 
     // /disk
-    public function getDiskPath() {
+    public function getDiskPath()
+    {
         return $this->diskPath;
     }
 
-    public function getDiskMysqlPath() {
-        return $this->diskMysqlPath;
+    public function getFirmwarePath()
+    {
+        return $this->firmwarePath;
     }
 
     // /memory
-    public function getMemoryPath() {
+    public function getMemoryPath()
+    {
         return $this->memoryPath;
     }
 
-    public function getAppRecoveryPath() {
-        return $this->appRecoveryPath;
-    }
-
-    public function getAppPath() {
+    public function getAppPath()
+    {
         return $this->appPath;
     }
 
-    public function getAppBinPath() {
+    public function getAppBinPath()
+    {
         return $this->appBinPath;
     }
 
-    public function getAppWebPath() {
+    public function getAppWebPath()
+    {
         return $this->appWebPath;
     }
-
-    public function getInitPejvakDatabase() {
-        return $this->initPejvakDatabase;
-    }
-
 }

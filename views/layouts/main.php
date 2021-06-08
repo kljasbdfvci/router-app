@@ -34,13 +34,27 @@ if (Yii::$app->user->isGuest) {
         [
             'label' => 'System',
             'active' => in_array(\Yii::$app->controller->id, [
-                'firmware', 'log',
-                'network', 'status'
+                'network', 'status', 'info', 'firmware', 'log',
             ]),
             'items' => [
                 //['label' => 'Level 1 - Dropdown A', 'url' => '#'],
                 //'<li class="divider"></li>',
                 //'<li class="dropdown-header">Dropdown Header</li>',
+                [
+                    'label' => 'Network',
+                    'url' => ['/network'],
+                    'active' => in_array(\Yii::$app->controller->id, ['network']),
+                ],
+                [
+                    'label' => 'Status',
+                    'url' => ['/status'],
+                    'active' => in_array(\Yii::$app->controller->id, ['status']),
+                ],
+                [
+                    'label' => 'Info',
+                    'url' => ['/info'],
+                    'active' => in_array(\Yii::$app->controller->id, ['info']),
+                ],
                 [
                     'label' => 'Firmware',
                     'url' => ['/firmware'],
@@ -53,16 +67,6 @@ if (Yii::$app->user->isGuest) {
                   'active' => in_array(\Yii::$app->controller->id, ['log']),
                   ],
                  */
-                [
-                    'label' => 'Network',
-                    'url' => ['/network'],
-                    'active' => in_array(\Yii::$app->controller->id, ['network']),
-                ],
-                [
-                    'label' => 'Status',
-                    'url' => ['/status'],
-                    'active' => in_array(\Yii::$app->controller->id, ['status']),
-                ],
                 [
                     'label' => 'Reboot',
                     'url' => ['/system/reboot'],

@@ -4,58 +4,44 @@ namespace app\models;
 
 use yii\base\Model;
 
-class FirmwareForm extends Model {
+class FirmwareForm extends Model
+{
 
     /**
      * @var UploadedFile
      */
-    public $appFile;
-    public $systemFile;
+    public $app;
+    public $os;
 
-    public function rules() {
+    public function rules()
+    {
         return [
-                [['appFile'], 'file',
-                'skipOnEmpty' => TRUE,
-                //'extensions' => 'tgz',
-                'checkExtensionByMimeType' => FALSE,
-            ],
-                [['systemFile'], 'file',
-                'skipOnEmpty' => TRUE,
-                //'extensions' => 'tgz',
-                'checkExtensionByMimeType' => FALSE,
-            ],
+            ['app', 'boolean'],
+            ['os', 'boolean'],
         ];
     }
 
-    public function uploadAppFile() {
-        if ($this->validate()) {
+    public function updateSystem()
+    {
+        if ($this->app) {
             $firmware = new \app\helper\Firmware();
-            $this->appFile->saveAs($firmware->getAppTmpFilePath());
-            //$this->firmwareFile->baseName . '.' . $this->firmwareFile->extension
-            $resCheckAppTmpFile = $firmware->checkAppTmpFile();
-            return $resCheckAppTmpFile;
-        } else {
-            return false;
+            if ($firmware->appUpdate() == 0) {
+                $firmware->setAppUpdated();
+            }
+        }
+        if ($this->os) {
+            $firmware = new \app\helper\Firmware();
+            if ($firmware->osUpdate() == 0) {
+                $firmware->setOsUpdated();
+            }
         }
     }
 
-    public function uploadSystemFile() {
-        if ($this->validate()) {
-            $firmware = new \app\helper\Firmware();
-            $this->systemFile->saveAs($firmware->getSystemTmpFilePath());
-            //$this->firmwareFile->baseName . '.' . $this->firmwareFile->extension
-            $resCheckSystemTmpFile = $firmware->checkSystemTmpFile();
-            return $resCheckSystemTmpFile;
-        } else {
-            return false;
-        }
-    }
-
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return [
-            'appFile' => "Application File",
-            'systemFile' => "System File",
+            'app' => "Application Update",
+            'os' => "System Update",
         ];
     }
-
 }
