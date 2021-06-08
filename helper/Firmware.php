@@ -29,11 +29,11 @@ class Firmware
         // App
         $this->appName = $variable->getAppName();
         $this->appCurrentVersionPath = $variable->getAppPath() . '/version';
-        $this->appUpdatedFlagPath = $variable->getTmpPath() . $this->appName . ".new";
+        $this->appUpdatedFlagPath = $variable->getTmpPath() . "/" . $this->appName . ".new";
         // Os
         $this->osName = $variable->getOsName();
         $this->osCurrentVersionPath = '/version';
-        $this->osUpdatedFlagPath = $variable->getTmpPath() . $this->osName . ".new";
+        $this->osUpdatedFlagPath = $variable->getTmpPath() . "/" . $this->osName . ".new";
     }
 
     public function getAppCurrentVersion()
