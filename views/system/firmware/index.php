@@ -33,12 +33,13 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     </h4>
                 </div>
                 <div class="panel-body">
+                <?= "aaa{$appCurrentVersion}aaa{$appNewVersion}aaa" ?>
                     <p>Current Version: <?= $appCurrentVersion ?></p>
                     <p>New Version: <?= $appNewVersion ?></p>
-                    <?php if ($appCurrentVersion != $appNewVersion) { ?>
-                        <div class="form-group">
-                            <?= $form->field($model, 'app')->checkbox() ?>
-                        </div>
+                    <?php if (strcmp($appCurrentVersion, $appNewVersion) == 0) {?>
+                        <?= $form->field($model, 'app')->checkbox(['disabled' => 'disabled']) ?>
+                    <?php } else { ?>
+                        <?= $form->field($model, 'app')->checkbox() ?>
                     <?php } ?>
                 </div>
             </div>
@@ -57,7 +58,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                 <div class="panel-body">
                     <p>Current Version: <?= $osCurrentVersion ?></p>
                     <p>New Version: <?= $osNewVersion ?></p>
-                    <?php if ($osCurrentVersion != $osNewVersion) { ?>
+                    <?php if (strcmp($osCurrentVersion, $osNewVersion) == 0) { ?>
+                        <?= $form->field($model, 'os')->checkbox(['disabled' => 'disabled']) ?>
+                    <?php } else { ?>
                         <?= $form->field($model, 'os')->checkbox() ?>
                     <?php } ?>
                 </div>

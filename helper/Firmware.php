@@ -40,7 +40,7 @@ class Firmware
     {
         $file = new File($this->appCurrentVersionPath);
         if ($file->exists()) {
-            return $file->read();
+            return trim($file->read());
         } else {
             return "error";
         }
@@ -75,7 +75,7 @@ class Firmware
     {
         $file = new File($this->osCurrentVersionPath);
         if ($file->exists()) {
-            return $file->read();
+            return trim($file->read());
         } else {
             return "error";
         }
