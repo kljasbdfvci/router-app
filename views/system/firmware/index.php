@@ -33,10 +33,9 @@ $this->params['breadcrumbs'][] = ['label' => $this->title];
                     </h4>
                 </div>
                 <div class="panel-body">
-                <?= "aaa{$appCurrentVersion}aaa{$appNewVersion}aaa" ?>
                     <p>Current Version: <?= $appCurrentVersion ?></p>
                     <p>New Version: <?= $appNewVersion ?></p>
-                    <?php if (strcmp($appCurrentVersion, $appNewVersion) == 0) {?>
+                    <?php if (strcmp($appCurrentVersion, $appNewVersion) == 0) { ?>
                         <?= $form->field($model, 'app')->checkbox(['disabled' => 'disabled']) ?>
                     <?php } else { ?>
                         <?= $form->field($model, 'app')->checkbox() ?>
